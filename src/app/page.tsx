@@ -18,27 +18,25 @@ export default function Home() {
       </nav>
 
       {/* Hero */}
-      <section className="relative flex flex-col items-center justify-center min-h-screen px-6 text-center overflow-hidden">
-        {/* Fond dégradé chaud */}
-        <div className="absolute inset-0 bg-gradient-to-b from-amber-100/60 via-[#f5f0e8] to-[#ede6d8] pointer-events-none" />
-        {/* Cercle décoratif */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full bg-amber-200/20 blur-3xl pointer-events-none" />
+      <section className="relative flex flex-col items-center justify-center min-h-screen px-6 text-center overflow-hidden bg-[#14161b]">
+        {/* Lueur dorée */}
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full bg-amber-700/10 blur-3xl pointer-events-none" />
 
         <div className="relative z-10 flex flex-col items-center">
           <div className="flex items-center gap-3 mb-8">
-            <div className="h-px w-12 bg-amber-600/40" />
-            <p className="text-xs font-semibold tracking-[0.3em] text-amber-700 uppercase">
+            <div className="h-px w-12 bg-amber-500/40" />
+            <p className="text-xs font-semibold tracking-[0.3em] text-amber-500 uppercase">
               Rosh Hashana 5786
             </p>
-            <div className="h-px w-12 bg-amber-600/40" />
+            <div className="h-px w-12 bg-amber-500/40" />
           </div>
 
-          <h1 className="font-serif text-5xl md:text-7xl font-bold text-stone-800 leading-[1.1] max-w-3xl mb-6">
+          <h1 className="font-serif text-5xl md:text-7xl font-bold text-stone-50 leading-[1.1] max-w-3xl mb-6">
             Votre transfert privé<br />
-            <span className="text-amber-700 italic">vers Ouman</span>
+            <span className="text-amber-500 italic">vers Ouman</span>
           </h1>
 
-          <p className="text-base md:text-lg text-stone-500 max-w-lg mb-12 leading-relaxed">
+          <p className="text-base md:text-lg text-stone-300 max-w-lg mb-12 leading-relaxed">
             Depuis tous les aéroports d'Europe. Taxi, van, sprinter ou bus.
             Prix transparents, service soigné.
           </p>
@@ -46,13 +44,13 @@ export default function Home() {
           <div className="flex flex-col sm:flex-row gap-4">
             <Link
               href="/reservation"
-              className="px-9 py-4 text-sm font-semibold rounded-full bg-amber-700 text-amber-50 hover:bg-amber-800 transition-colors tracking-wide shadow-md shadow-amber-900/20"
+              className="px-9 py-4 text-sm font-semibold rounded-full bg-amber-600 text-stone-950 hover:bg-amber-500 transition-colors tracking-wide shadow-md shadow-black/40"
             >
               Demander un transfert
             </Link>
             <a
               href="#comment-ca-marche"
-              className="px-9 py-4 text-sm font-medium rounded-full border border-stone-300 text-stone-600 hover:bg-stone-100 transition-colors tracking-wide"
+              className="px-9 py-4 text-sm font-medium rounded-full border border-stone-600 text-stone-200 hover:bg-white/5 transition-colors tracking-wide"
             >
               Comment ça marche
             </a>
@@ -61,7 +59,7 @@ export default function Home() {
       </section>
 
       {/* Stats */}
-      <section className="bg-amber-800 grid grid-cols-3">
+      <section className="bg-black grid grid-cols-3">
         {[
           { num: "27+", label: "Points de départ" },
           { num: "7", label: "Types de véhicules" },
@@ -69,10 +67,10 @@ export default function Home() {
         ].map((s, i) => (
           <div
             key={s.label}
-            className={`flex flex-col items-center justify-center py-10 ${i < 2 ? "border-r border-amber-700" : ""}`}
+            className={`flex flex-col items-center justify-center py-10 ${i < 2 ? "border-r border-stone-800" : ""}`}
           >
-            <span className="font-serif text-3xl font-bold text-amber-100">{s.num}</span>
-            <span className="text-xs text-amber-300/70 mt-1 tracking-wide uppercase">{s.label}</span>
+            <span className="font-serif text-3xl font-bold text-amber-500">{s.num}</span>
+            <span className="text-xs text-stone-400 mt-1 tracking-wide uppercase">{s.label}</span>
           </div>
         ))}
       </section>
@@ -142,22 +140,22 @@ export default function Home() {
       </section>
 
       {/* CTA final */}
-      <section className="px-6 py-24 text-center bg-[#f5f0e8]">
+      <section className="px-6 py-24 text-center bg-[#14161b]">
         <div className="max-w-xl mx-auto">
           <div className="flex items-center justify-center gap-3 mb-6">
-            <div className="h-px w-10 bg-amber-600/30" />
-            <span className="text-xs font-semibold tracking-[0.25em] text-amber-700 uppercase">Réservation</span>
-            <div className="h-px w-10 bg-amber-600/30" />
+            <div className="h-px w-10 bg-amber-500/30" />
+            <span className="text-xs font-semibold tracking-[0.25em] text-amber-500 uppercase">Réservation</span>
+            <div className="h-px w-10 bg-amber-500/30" />
           </div>
-          <h2 className="font-serif text-3xl md:text-4xl font-bold text-stone-800 mb-4">
-            Prêt à partir vers Ouman ?
+          <h2 className="font-serif text-3xl md:text-4xl font-bold text-stone-50 mb-4">
+            Prêt à partir vers <span className="text-amber-500 italic">Ouman</span> ?
           </h2>
-          <p className="text-stone-500 mb-10 leading-relaxed">
+          <p className="text-stone-300 mb-10 leading-relaxed">
             Faites votre demande en 2 minutes. Réponse sous 48h, sans engagement.
           </p>
           <Link
             href="/reservation"
-            className="inline-block px-10 py-4 text-sm font-semibold rounded-full bg-amber-700 text-amber-50 hover:bg-amber-800 transition-colors tracking-wide shadow-md shadow-amber-900/20"
+            className="inline-block px-10 py-4 text-sm font-semibold rounded-full bg-amber-600 text-stone-950 hover:bg-amber-500 transition-colors tracking-wide shadow-md shadow-black/40"
           >
             Demander un transfert
           </Link>
@@ -165,8 +163,8 @@ export default function Home() {
       </section>
 
       {/* Footer */}
-      <footer className="px-6 py-8 border-t border-stone-200 text-center bg-[#ede8df]">
-        <p className="text-stone-400 text-xs tracking-wide">© 2025 Uman Now — Transferts privés vers Ouman</p>
+      <footer className="px-6 py-8 border-t border-stone-800 text-center bg-black">
+        <p className="text-stone-500 text-xs tracking-wide">© 2025 Uman Now — Transferts privés vers Ouman</p>
       </footer>
     </main>
   );
