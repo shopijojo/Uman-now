@@ -11,8 +11,8 @@ export function SiteNav({ showLinks = true }: { showLinks?: boolean }) {
       <div className="max-w-[1180px] mx-auto px-6 md:px-10 py-3.5 flex items-center justify-between">
         <Link href="/" dir="ltr" className="flex items-center font-sans font-extrabold text-2xl tracking-[-0.03em]">
           <span className="text-[#16181d]">uman</span>
-          <span className="text-amber-600">now</span>
-          <span className="w-2 h-2 bg-amber-600 rounded-sm ms-1.5 self-end mb-1.5" />
+          <span className="text-[#a9814e]">now</span>
+          <span className="w-2 h-2 bg-[#a9814e] rounded-sm ms-1.5 self-end mb-1.5" />
         </Link>
         <nav className="flex items-center gap-5">
           {showLinks && (

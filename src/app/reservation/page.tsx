@@ -65,10 +65,10 @@ export default function ReservationPage() {
       <main className="min-h-screen flex items-center justify-center px-6 bg-[#e6e2d8] pt-24">
         <div className="max-w-md w-full">
           <div className="bg-[#f6f3ec] border border-black/[0.07] rounded-[22px] p-10 md:p-12 text-center">
-            <div className="w-[58px] h-[58px] rounded-full bg-amber-600 flex items-center justify-center mx-auto mb-6 text-[#f2efe7] text-2xl font-extrabold">
+            <div className="w-[58px] h-[58px] rounded-full bg-[#a9814e] flex items-center justify-center mx-auto mb-6 text-[#f2efe7] text-2xl font-extrabold">
               ✓
             </div>
-            <div className="font-mono text-[11px] tracking-[0.26em] uppercase text-amber-600 mb-3">{t.confKicker}</div>
+            <div className="font-mono text-[11px] tracking-[0.26em] uppercase text-[#a9814e] mb-3">{t.confKicker}</div>
             <h1 className="font-sans font-extrabold text-[28px] md:text-[34px] leading-[1.1] tracking-[-0.02em] mb-2.5">
               {t.thanks} {form.name}
             </h1>
@@ -104,7 +104,7 @@ export default function ReservationPage() {
 
       <div className="max-w-[620px] mx-auto pt-24">
         <div className="mb-9">
-          <div className="font-mono text-[11px] tracking-[0.26em] uppercase text-amber-600 mb-3.5">{t.resKicker}</div>
+          <div className="font-mono text-[11px] tracking-[0.26em] uppercase text-[#a9814e] mb-3.5">{t.resKicker}</div>
           <h1 className="font-sans font-extrabold text-[32px] md:text-[42px] leading-[1.05] tracking-[-0.02em] mb-2">{t.resTitle}</h1>
           <p className="text-black/60">{t.resSub}</p>
         </div>
@@ -145,7 +145,7 @@ export default function ReservationPage() {
             {price !== null && (
               <div className="flex items-center justify-between px-5 py-4 rounded-xl bg-[#16181d] text-[#f2efe7]">
                 <span className="font-mono text-[11px] tracking-[0.2em] uppercase text-white/55">{t.priceKicker}</span>
-                <span dir="ltr" className="font-sans font-extrabold text-2xl tracking-[-0.02em] text-amber-500">
+                <span dir="ltr" className="font-sans font-extrabold text-2xl tracking-[-0.02em] text-[#a9814e]">
                   {price.toLocaleString()} €
                 </span>
               </div>
@@ -179,7 +179,7 @@ export default function ReservationPage() {
               <label className="flex items-center gap-3 cursor-pointer select-none">
                 <div
                   onClick={() => set("withPilgrimage", !form.withPilgrimage)}
-                  className={`w-10 h-6 rounded-full transition-colors relative ${form.withPilgrimage ? "bg-amber-600" : "bg-stone-300"}`}
+                  className={`w-10 h-6 rounded-full transition-colors relative ${form.withPilgrimage ? "bg-[#a9814e]" : "bg-stone-300"}`}
                 >
                   <span
                     className={`absolute top-1 w-4 h-4 rounded-full bg-white shadow transition-transform ${form.withPilgrimage ? "translate-x-5" : "translate-x-1"}`}
@@ -208,7 +208,7 @@ export default function ReservationPage() {
           </Section>
 
           {form.name && form.email && form.departureId && form.vehicleId && (
-            <div className="rounded-xl border border-amber-600/25 bg-amber-50/60 px-5 py-4 text-sm text-black/60 space-y-1">
+            <div className="rounded-xl border border-[#a9814e]/25 bg-[#a9814e]/10 px-5 py-4 text-sm text-black/60 space-y-1">
               <p className="font-semibold text-black/80 mb-2">{t.recap}</p>
               <p>
                 {t.sumDepart} : <span className="text-black/90">{selectedRoute?.label}</span>
@@ -218,11 +218,11 @@ export default function ReservationPage() {
               </p>
               {price && (
                 <p>
-                  {t.priceKicker} : <span dir="ltr" className="text-amber-700 font-semibold">{price.toLocaleString()} €</span>
+                  {t.priceKicker} : <span dir="ltr" className="text-[#8a6a3e] font-semibold">{price.toLocaleString()} €</span>
                 </p>
               )}
               <p>
-                {t.sumRef} : <span className="font-mono text-amber-700">{ref}</span>
+                {t.sumRef} : <span className="font-mono text-[#8a6a3e]">{ref}</span>
               </p>
             </div>
           )}
