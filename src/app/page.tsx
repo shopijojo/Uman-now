@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { SiteNav } from "@/components/site-nav";
 import { useLang, FLEET_ORDER } from "@/lib/i18n";
 import { vehicles } from "@/data/pricing";
@@ -49,8 +50,15 @@ export default function Home() {
               </a>
             </div>
           </div>
-          <div className="relative w-full max-w-[540px] ms-auto aspect-[3/2] rounded-[22px] overflow-hidden shadow-[0_40px_80px_-40px_rgba(0,0,0,0.7)] bg-gradient-to-br from-[#a9814e]/20 via-[#14161b] to-black flex items-center justify-center border border-white/10">
-            <span className="font-mono text-[11px] tracking-[0.2em] uppercase text-white/30">Photo à venir</span>
+          <div className="relative w-full max-w-[540px] ms-auto aspect-[3/2] rounded-[22px] overflow-hidden shadow-[0_40px_80px_-40px_rgba(0,0,0,0.7)] border border-white/10">
+            <Image
+              src="/hero-uman.png"
+              alt="Transfert privé vers Ouman"
+              fill
+              priority
+              sizes="(min-width: 768px) 540px, 100vw"
+              className="object-cover"
+            />
           </div>
         </div>
       </section>
