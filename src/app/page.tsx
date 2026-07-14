@@ -1,170 +1,163 @@
+"use client";
+
 import Link from "next/link";
+import { SiteNav } from "@/components/site-nav";
+import { useLang, FLEET_ORDER } from "@/lib/i18n";
+import { vehicles } from "@/data/pricing";
+
+const FLEET_META: Record<string, { pax: string; dark?: boolean }> = {
+  taxi: { pax: "1–4" },
+  jeep: { pax: "1–4" },
+  minivan: { pax: "5–7" },
+  sprinter: { pax: "15" },
+  midibus: { pax: "29" },
+  autocar: { pax: "50" },
+  grandcar: { pax: "80" },
+};
 
 export default function Home() {
+  const { t } = useLang();
+
   return (
-    <main className="flex flex-col min-h-screen bg-[#f5f0e8]">
+    <main className="flex flex-col min-h-screen bg-[#e6e2d8] text-[#16181d]">
+      <SiteNav />
 
-      {/* Nav */}
-      <nav className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-8 py-5 bg-[#f5f0e8]/90 backdrop-blur-md border-b border-stone-200">
-        <span className="font-serif text-xl font-bold tracking-widest text-stone-800">
-          UMAN <span className="text-amber-700">NOW</span>
-        </span>
-        <Link
-          href="/reservation"
-          className="px-6 py-2.5 text-sm font-semibold rounded-full bg-amber-700 text-amber-50 hover:bg-amber-800 transition-colors tracking-wide"
-        >
-          Réserver
-        </Link>
-      </nav>
-
-      {/* Hero */}
-      <section className="relative flex flex-col items-center justify-center min-h-screen px-6 text-center overflow-hidden bg-[#14161b]">
-        {/* Lueur dorée */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full bg-amber-700/10 blur-3xl pointer-events-none" />
-
-        <div className="relative z-10 flex flex-col items-center">
-          <div className="flex items-center gap-3 mb-8">
-            <div className="h-px w-12 bg-amber-500/40" />
-            <p className="text-xs font-semibold tracking-[0.3em] text-amber-500 uppercase">
-              Rosh Hashana 5786
-            </p>
-            <div className="h-px w-12 bg-amber-500/40" />
+      {/* HERO */}
+      <section className="relative bg-[#14161b] text-[#f2efe7] overflow-hidden pt-24">
+        <div className="max-w-[1180px] mx-auto px-6 md:px-10 py-16 md:py-24 grid md:grid-cols-[1.05fr_.95fr] gap-12 md:gap-16 items-center">
+          <div>
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 border border-white/20 rounded-full font-mono text-[11px] tracking-[0.16em] uppercase text-white/75">
+              <span className="w-1.5 h-1.5 rounded-full bg-amber-500 shadow-[0_0_0_4px_rgba(217,164,65,0.28)]" />
+              {t.badge}
+            </div>
+            <h1 className="font-sans font-extrabold text-[42px] md:text-[62px] leading-[1.05] tracking-[-0.025em] mt-6 mb-5">
+              {t.heroPre} <span className="text-amber-500">{t.heroAccent}</span>
+            </h1>
+            <p className="max-w-[440px] text-base md:text-[17px] leading-relaxed text-white/70 mb-8">{t.heroSub}</p>
+            <div className="flex flex-wrap gap-3.5">
+              <Link
+                href="/reservation"
+                className="border-none rounded-[13px] bg-amber-600 text-stone-950 font-sans font-bold text-base px-7 py-4 hover:bg-amber-500 transition-colors"
+              >
+                {t.btnPrimary}
+              </Link>
+              <a
+                href="#process"
+                className="inline-flex items-center rounded-[13px] border border-white/25 text-[#f2efe7] font-sans font-semibold text-base px-6 py-4 hover:border-white/55 transition-colors"
+              >
+                {t.btnSecondary}
+              </a>
+            </div>
           </div>
-
-          <h1 className="font-serif text-5xl md:text-7xl font-bold text-stone-50 leading-[1.1] max-w-3xl mb-6">
-            Votre transfert privé<br />
-            <span className="text-amber-500 italic">vers Ouman</span>
-          </h1>
-
-          <p className="text-base md:text-lg text-stone-300 max-w-lg mb-12 leading-relaxed">
-            Depuis tous les aéroports d'Europe. Taxi, van, sprinter ou bus.
-            Prix transparents, service soigné.
-          </p>
-
-          <div className="flex flex-col sm:flex-row gap-4">
-            <Link
-              href="/reservation"
-              className="px-9 py-4 text-sm font-semibold rounded-full bg-amber-600 text-stone-950 hover:bg-amber-500 transition-colors tracking-wide shadow-md shadow-black/40"
-            >
-              Demander un transfert
-            </Link>
-            <a
-              href="#comment-ca-marche"
-              className="px-9 py-4 text-sm font-medium rounded-full border border-stone-600 text-stone-200 hover:bg-white/5 transition-colors tracking-wide"
-            >
-              Comment ça marche
-            </a>
+          <div className="relative w-full max-w-[540px] ms-auto aspect-[3/2] rounded-[22px] overflow-hidden shadow-[0_40px_80px_-40px_rgba(0,0,0,0.7)] bg-gradient-to-br from-amber-900/40 via-[#14161b] to-black flex items-center justify-center border border-white/10">
+            <span className="font-mono text-[11px] tracking-[0.2em] uppercase text-white/30">Photo à venir</span>
           </div>
         </div>
       </section>
 
-      {/* Stats */}
-      <section className="bg-black grid grid-cols-3">
-        {[
-          { num: "27+", label: "Points de départ" },
-          { num: "7", label: "Types de véhicules" },
-          { num: "48h", label: "Réponse garantie" },
-        ].map((s, i) => (
-          <div
-            key={s.label}
-            className={`flex flex-col items-center justify-center py-10 ${i < 2 ? "border-r border-stone-800" : ""}`}
-          >
-            <span className="font-serif text-3xl font-bold text-amber-500">{s.num}</span>
-            <span className="text-xs text-stone-400 mt-1 tracking-wide uppercase">{s.label}</span>
-          </div>
-        ))}
-      </section>
-
-      {/* Comment ça marche */}
-      <section id="comment-ca-marche" className="px-6 py-24 max-w-5xl mx-auto w-full">
-        <div className="text-center mb-16">
-          <p className="text-xs font-semibold tracking-[0.25em] text-amber-700 uppercase mb-3">Processus</p>
-          <h2 className="font-serif text-3xl md:text-4xl font-bold text-stone-800">Simple comme bonjour</h2>
-        </div>
-        <div className="grid md:grid-cols-3 gap-6">
+      {/* STATS */}
+      <section className="bg-black border-y border-stone-800">
+        <div className="max-w-[1180px] mx-auto px-6 md:px-10 py-9 grid grid-cols-3 gap-6">
           {[
-            {
-              step: "01",
-              title: "Remplissez le formulaire",
-              desc: "Votre départ, vos dates, le nombre de passagers. 2 minutes.",
-            },
-            {
-              step: "02",
-              title: "On confirme la dispo",
-              desc: "Vous recevez une confirmation par email avec le prix final sous 24–48h.",
-            },
-            {
-              step: "03",
-              title: "Paiement & départ",
-              desc: "Réglez en ligne par carte. Le chauffeur vous attend à l'heure.",
-            },
-          ].map((item) => (
-            <div key={item.step} className="relative flex flex-col gap-4 p-8 rounded-2xl bg-white border border-stone-200 shadow-sm hover:shadow-md transition-shadow">
-              <span className="font-serif text-5xl font-bold text-amber-200">{item.step}</span>
-              <h3 className="text-base font-semibold text-stone-800">{item.title}</h3>
-              <p className="text-stone-500 text-sm leading-relaxed">{item.desc}</p>
+            { num: "27", suffix: "+", label: t.statA },
+            { num: "7", suffix: "", label: t.statB },
+            { num: "48", suffix: "h", label: t.statC },
+          ].map((s, i) => (
+            <div key={s.label} className={`flex flex-col gap-1.5 ${i > 0 ? "border-s border-stone-800 ps-6 md:ps-8" : ""}`}>
+              <div dir="ltr" className="font-sans font-extrabold text-3xl md:text-[46px] leading-none tracking-[-0.02em] text-stone-50">
+                {s.num}
+                <span className="text-amber-500">{s.suffix}</span>
+              </div>
+              <div className="font-mono text-[11px] tracking-[0.14em] uppercase text-stone-400">{s.label}</div>
             </div>
           ))}
         </div>
       </section>
 
-      {/* Véhicules */}
-      <section className="px-6 py-24 bg-[#ede8df]">
-        <div className="max-w-5xl mx-auto">
-          <div className="text-center mb-16">
-            <p className="text-xs font-semibold tracking-[0.25em] text-amber-700 uppercase mb-3">Flotte</p>
-            <h2 className="font-serif text-3xl md:text-4xl font-bold text-stone-800">Pour tous les groupes</h2>
-          </div>
+      {/* PROCESS */}
+      <section id="process" className="max-w-[1180px] mx-auto px-6 md:px-10 py-16 md:py-24 w-full">
+        <div className="font-mono text-[11px] tracking-[0.26em] uppercase text-amber-600 mb-3.5">{t.procKicker}</div>
+        <h2 className="font-sans font-extrabold text-3xl md:text-[44px] leading-[1.05] tracking-[-0.02em] mb-10 md:mb-14 max-w-[520px]">
+          {t.procTitle}
+        </h2>
+        <div className="grid md:grid-cols-3 gap-6">
+          {[
+            { n: "01", title: t.s1t, body: t.s1b },
+            { n: "02", title: t.s2t, body: t.s2b },
+            { n: "03", title: t.s3t, body: t.s3b },
+          ].map((step) => (
+            <div key={step.n} className="bg-[#f6f3ec] border border-black/[0.06] rounded-[18px] p-7 md:p-8 flex flex-col gap-4">
+              <div dir="ltr" className="font-mono font-bold text-[15px] text-amber-600">{step.n}</div>
+              <h3 className="font-sans font-bold text-xl tracking-[-0.01em]">{step.title}</h3>
+              <p className="text-[15px] leading-relaxed text-black/60">{step.body}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* FLEET */}
+      <section id="flotte" className="bg-[#efeae0] border-y border-black/[0.07]">
+        <div className="max-w-[1180px] mx-auto px-6 md:px-10 py-16 md:py-24">
+          <div className="font-mono text-[11px] tracking-[0.26em] uppercase text-amber-600 mb-3.5">{t.fleetKicker}</div>
+          <h2 className="font-sans font-extrabold text-3xl md:text-[44px] leading-[1.05] tracking-[-0.02em] mb-10 md:mb-14 max-w-[520px]">
+            {t.fleetTitle}
+          </h2>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            {[
-              { label: "Taxi / Berline", cap: "1–4 pax", icon: "🚘" },
-              { label: "Jeep / SUV", cap: "1–4 pax", icon: "🚙" },
-              { label: "Minivan", cap: "5–7 pax", icon: "🚐" },
-              { label: "Sprinter", cap: "15 pax", icon: "🚌" },
-              { label: "Midibus", cap: "29 pax", icon: "🚌" },
-              { label: "Autocar", cap: "50 pax", icon: "🚍" },
-              { label: "Grand car", cap: "80 pax", icon: "🚍" },
-              { label: "VIP / Business", cap: "sur demande", icon: "⭐" },
-            ].map((v) => (
-              <div
-                key={v.label}
-                className="flex flex-col items-center gap-2 p-6 rounded-2xl bg-white border border-stone-200 text-center hover:border-amber-400 hover:shadow-md transition-all cursor-default"
-              >
-                <span className="text-3xl">{v.icon}</span>
-                <span className="text-sm font-semibold text-stone-700">{v.label}</span>
-                <span className="text-xs text-stone-400">{v.cap}</span>
+            {FLEET_ORDER.map((id) => {
+              const v = vehicles.find((veh) => veh.id === id);
+              if (!v) return null;
+              const meta = FLEET_META[id];
+              return (
+                <div
+                  key={id}
+                  className="bg-[#f6f3ec] border border-black/[0.07] rounded-2xl p-6 flex flex-col gap-5 min-h-[160px] justify-between"
+                >
+                  <div className="font-mono text-[10px] tracking-[0.18em] uppercase text-black/45">{t.pax}</div>
+                  <div>
+                    <div dir="ltr" className="font-sans font-extrabold text-[32px] md:text-[38px] leading-none tracking-[-0.02em] text-amber-600">
+                      {meta.pax}
+                    </div>
+                    <div className="font-sans font-bold text-base mt-2">{v.label}</div>
+                  </div>
+                </div>
+              );
+            })}
+            <div className="bg-[#16181d] border border-[#16181d] rounded-2xl p-6 flex flex-col gap-5 min-h-[160px] justify-between text-[#f2efe7]">
+              <div className="font-mono text-[10px] tracking-[0.18em] uppercase text-white/50">{t.onDemand}</div>
+              <div>
+                <div dir="ltr" className="font-sans font-extrabold text-[30px] md:text-[34px] leading-none tracking-[-0.02em] text-amber-500">
+                  VIP
+                </div>
+                <div className="font-sans font-bold text-base mt-2">{t.business}</div>
               </div>
-            ))}
+            </div>
           </div>
         </div>
       </section>
 
-      {/* CTA final */}
-      <section className="px-6 py-24 text-center bg-[#14161b]">
-        <div className="max-w-xl mx-auto">
-          <div className="flex items-center justify-center gap-3 mb-6">
-            <div className="h-px w-10 bg-amber-500/30" />
-            <span className="text-xs font-semibold tracking-[0.25em] text-amber-500 uppercase">Réservation</span>
-            <div className="h-px w-10 bg-amber-500/30" />
-          </div>
-          <h2 className="font-serif text-3xl md:text-4xl font-bold text-stone-50 mb-4">
-            Prêt à partir vers <span className="text-amber-500 italic">Ouman</span> ?
+      {/* CTA */}
+      <section className="bg-[#14161b] text-[#f2efe7]">
+        <div className="max-w-[1180px] mx-auto px-6 md:px-10 py-16 md:py-24 flex flex-col items-center text-center gap-6">
+          <h2 className="font-sans font-extrabold text-3xl md:text-5xl leading-[1.04] tracking-[-0.025em] max-w-[640px]">
+            {t.ctaPre} <span className="text-amber-500">{t.ctaAccent}</span> {t.ctaPost}
           </h2>
-          <p className="text-stone-300 mb-10 leading-relaxed">
-            Faites votre demande en 2 minutes. Réponse sous 48h, sans engagement.
-          </p>
+          <p className="max-w-[440px] text-base md:text-[17px] leading-relaxed text-white/70">{t.ctaSub}</p>
           <Link
             href="/reservation"
-            className="inline-block px-10 py-4 text-sm font-semibold rounded-full bg-amber-600 text-stone-950 hover:bg-amber-500 transition-colors tracking-wide shadow-md shadow-black/40"
+            className="mt-1.5 border-none rounded-[13px] bg-amber-600 text-stone-950 font-sans font-bold text-base px-8 py-4 hover:bg-amber-500 transition-colors"
           >
-            Demander un transfert
+            {t.btnPrimary}
           </Link>
         </div>
       </section>
 
-      {/* Footer */}
-      <footer className="px-6 py-8 border-t border-stone-800 text-center bg-black">
-        <p className="text-stone-500 text-xs tracking-wide">© 2025 Uman Now — Transferts privés vers Ouman</p>
+      {/* FOOTER */}
+      <footer className="max-w-[1180px] mx-auto w-full px-6 md:px-10 py-10 flex items-center justify-between flex-wrap gap-4">
+        <div dir="ltr" className="flex items-center font-sans font-extrabold text-lg tracking-[-0.03em]">
+          <span className="text-[#16181d]">uman</span>
+          <span className="text-amber-600">now</span>
+        </div>
+        <div className="font-mono text-[11px] tracking-[0.08em] text-black/50">{t.footer}</div>
       </footer>
     </main>
   );

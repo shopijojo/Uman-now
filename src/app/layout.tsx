@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
-import { Geist } from "next/font/google";
-import { Playfair_Display } from "next/font/google";
+import { Archivo, Space_Mono } from "next/font/google";
 import "./globals.css";
+import { LanguageProvider } from "@/lib/i18n";
 
-const geist = Geist({ variable: "--font-sans", subsets: ["latin"] });
-const playfair = Playfair_Display({ variable: "--font-serif", subsets: ["latin"] });
+const archivo = Archivo({ variable: "--font-sans", subsets: ["latin"], weight: ["400", "500", "600", "700", "800", "900"] });
+const spaceMono = Space_Mono({ variable: "--font-mono", subsets: ["latin"], weight: ["400", "700"] });
 
 export const metadata: Metadata = {
   title: "Uman Now — Transferts privés vers Ouman",
@@ -13,8 +13,10 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="fr" className={`${geist.variable} ${playfair.variable} h-full`}>
-      <body className="min-h-full flex flex-col antialiased">{children}</body>
+    <html lang="fr" className={`${archivo.variable} ${spaceMono.variable} h-full`}>
+      <body className="min-h-full flex flex-col antialiased bg-[#e6e2d8]">
+        <LanguageProvider>{children}</LanguageProvider>
+      </body>
     </html>
   );
 }
