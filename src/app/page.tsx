@@ -8,7 +8,6 @@ import { vehicles } from "@/data/pricing";
 
 const FLEET_META: Record<string, { pax: string; dark?: boolean }> = {
   taxi: { pax: "1–4" },
-  jeep: { pax: "1–4" },
   minivan: { pax: "5–7" },
   sprinter: { pax: "15" },
   midibus: { pax: "29" },
@@ -68,8 +67,8 @@ export default function Home() {
         <div className="max-w-[1180px] mx-auto px-6 md:px-10 py-9 grid grid-cols-3 gap-6">
           {[
             { num: "27", suffix: "+", label: t.statA },
-            { num: "7", suffix: "", label: t.statB },
-            { num: "48", suffix: "h", label: t.statC },
+            { num: "6", suffix: "", label: t.statB },
+            { num: "24", suffix: "h", label: t.statC },
           ].map((s, i) => (
             <div key={s.label} className={`flex flex-col gap-1.5 ${i > 0 ? "border-s border-stone-800 ps-6 md:ps-8" : ""}`}>
               <div dir="ltr" className="font-sans font-extrabold text-3xl md:text-[46px] leading-none tracking-[-0.02em] text-stone-50">

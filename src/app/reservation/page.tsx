@@ -2,12 +2,15 @@
 
 import { useState, useMemo } from "react";
 import Link from "next/link";
-import { routes, vehicles, getPrice } from "@/data/pricing";
+import { routes, vehicles, getPrice, getCompetitorPrice } from "@/data/pricing";
 import { SiteNav } from "@/components/site-nav";
 import { useLang, regionLabel, vehicleLabel } from "@/lib/i18n";
 
+type TripType = "to" | "from" | "roundtrip";
+
 type FormData = {
-  departureId: string;
+  tripType: TripType;
+  cityId: string;
   vehicleId: string;
   date: string;
   passengers: string;
@@ -20,7 +23,8 @@ type FormData = {
 };
 
 const EMPTY: FormData = {
-  departureId: "",
+  tripType: "to",
+  cityId: "",
   vehicleId: "",
   date: "",
   passengers: "",
@@ -41,16 +45,29 @@ export default function ReservationPage() {
   const [loading, setLoading] = useState(false);
   const [ref] = useState(() => "UN-" + Math.random().toString(36).slice(2, 8).toUpperCase());
 
-  const price = useMemo(() => {
-    if (!form.departureId || !form.vehicleId) return null;
-    return getPrice(Number(form.departureId), form.vehicleId, form.withPilgrimage);
-  }, [form.departureId, form.vehicleId, form.withPilgrimage]);
+  const isRoundtrip = form.tripType === "roundtrip";
 
-  const set = (field: keyof FormData, value: string | boolean) =>
+  const basePrice = useMemo(() => {
+    if (!form.cityId || !form.vehicleId) return null;
+    return getPrice(Number(form.cityId), form.vehicleId, form.withPilgrimage);
+  }, [form.cityId, form.vehicleId, form.withPilgrimage]);
+
+  const baseCompetitor = useMemo(() => {
+    if (!form.cityId || !form.vehicleId) return null;
+    return getCompetitorPrice(Number(form.cityId), form.vehicleId);
+  }, [form.cityId, form.vehicleId]);
+
+  const price = basePrice !== null ? (isRoundtrip ? basePrice * 2 : basePrice) : null;
+  const competitorPrice = baseCompetitor !== null ? (isRoundtrip ? baseCompetitor * 2 : baseCompetitor) : null;
+  const savings = price !== null && competitorPrice !== null ? competitorPrice - price : null;
+
+  const set = <K extends keyof FormData>(field: K, value: FormData[K]) =>
     setForm((f) => ({ ...f, [field]: value }));
 
-  const selectedRoute = routes.find((r) => r.id === Number(form.departureId));
+  const selectedCity = routes.find((r) => r.id === Number(form.cityId));
   const selectedVehicle = vehicles.find((v) => v.id === form.vehicleId);
+
+  const cityLabel = selectedCity ? `${selectedCity.label}${selectedCity.code ? ` (${selectedCity.code})` : ""}` : null;
 
   const handleSubmit = async (e: React.SyntheticEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -59,6 +76,13 @@ export default function ReservationPage() {
     setLoading(false);
     setSubmitted(true);
   };
+
+  const tripSummaryLabel = (() => {
+    if (!cityLabel) return "—";
+    if (form.tripType === "to") return `${cityLabel} → Ouman`;
+    if (form.tripType === "from") return `Ouman → ${cityLabel}`;
+    return `${cityLabel} ⇄ Ouman`;
+  })();
 
   if (submitted) {
     return (
@@ -75,7 +99,7 @@ export default function ReservationPage() {
             <p className="text-black/60 mb-8 leading-relaxed">{t.confBody}</p>
 
             <div className="text-start bg-white border border-black/[0.08] rounded-2xl px-6 py-5 mb-7 flex flex-col gap-3.5">
-              <SummaryRow label={t.sumDepart} value={selectedRoute ? `${selectedRoute.label}${selectedRoute.code ? ` (${selectedRoute.code})` : ""}` : "—"} />
+              <SummaryRow label={t.sumDepart} value={tripSummaryLabel} ltr />
               <div className="h-px bg-black/[0.08]" />
               <SummaryRow label={t.sumVehicle} value={selectedVehicle ? vehicleLabel(selectedVehicle.id, selectedVehicle.label, lang) : "—"} />
               <div className="h-px bg-black/[0.08]" />
@@ -113,9 +137,25 @@ export default function ReservationPage() {
 
           {/* TRAJET */}
           <Section title={t.trajet}>
-            <Field label={t.departLabel}>
-              <select required value={form.departureId} onChange={(e) => set("departureId", e.target.value)} className="input">
-                <option value="">{t.departPrompt}</option>
+            {/* Type de trajet */}
+            <div dir="ltr" className="flex rounded-xl border border-black/15 overflow-hidden text-sm font-semibold">
+              {(["to", "from", "roundtrip"] as TripType[]).map((tt) => (
+                <button
+                  key={tt}
+                  type="button"
+                  onClick={() => set("tripType", tt)}
+                  className={`flex-1 py-2.5 px-2 transition-colors ${form.tripType === tt ? "bg-[#16181d] text-[#f2efe7]" : "bg-white/60 text-black/60 hover:bg-white"}`}
+                >
+                  {tt === "to" ? t.tripToLabel : tt === "from" ? t.tripFromLabel : t.tripRoundtripLabel}
+                </button>
+              ))}
+            </div>
+
+            <Field label={form.tripType === "to" ? t.departLabel : form.tripType === "from" ? t.destinationLabel : t.cityLabel}>
+              <select required value={form.cityId} onChange={(e) => set("cityId", e.target.value)} className="input">
+                <option value="">
+                  {form.tripType === "to" ? t.departPrompt : form.tripType === "from" ? t.destinationPrompt : t.cityPrompt}
+                </option>
                 {regions.map((region) => (
                   <optgroup key={region} label={regionLabel(region, lang)}>
                     {routes
@@ -131,6 +171,14 @@ export default function ReservationPage() {
               </select>
             </Field>
 
+            {cityLabel && (
+              <div dir="ltr" className="flex items-center justify-center gap-2.5 py-3 px-4 rounded-xl bg-[#a9814e]/10 border border-[#a9814e]/25 font-sans font-bold text-sm">
+                <span className="text-black/80">{form.tripType === "from" ? "Ouman" : cityLabel}</span>
+                <span className="text-[#a9814e]">{form.tripType === "roundtrip" ? "⇄" : "→"}</span>
+                <span className="text-[#a9814e]">{form.tripType === "from" ? cityLabel : "Ouman"}</span>
+              </div>
+            )}
+
             <Field label={t.vehicleLabel}>
               <select required value={form.vehicleId} onChange={(e) => set("vehicleId", e.target.value)} className="input">
                 <option value="">{t.vehiclePrompt}</option>
@@ -143,14 +191,25 @@ export default function ReservationPage() {
             </Field>
 
             {price !== null && (
-              <div className="flex items-center justify-between px-5 py-4 rounded-xl bg-[#16181d] text-[#f2efe7]">
-                <span className="font-mono text-[11px] tracking-[0.2em] uppercase text-white/55">{t.priceKicker}</span>
-                <span dir="ltr" className="font-sans font-extrabold text-2xl tracking-[-0.02em] text-[#a9814e]">
-                  {price.toLocaleString()} €
-                </span>
+              <div className="rounded-xl bg-[#16181d] text-[#f2efe7] px-5 py-4 flex flex-col gap-2">
+                <div className="flex items-center justify-between">
+                  <span className="font-mono text-[11px] tracking-[0.2em] uppercase text-white/55">{t.priceKicker}</span>
+                  <div dir="ltr" className="flex items-baseline gap-2.5">
+                    {competitorPrice !== null && (
+                      <span className="font-sans font-semibold text-base text-white/40 line-through">{competitorPrice.toLocaleString()} €</span>
+                    )}
+                    <span className="font-sans font-extrabold text-2xl tracking-[-0.02em] text-[#a9814e]">{price.toLocaleString()} €</span>
+                  </div>
+                </div>
+                {savings !== null && savings > 0 && (
+                  <div className="self-end inline-flex items-center gap-1.5 rounded-full bg-[#a9814e] text-[#16181d] font-sans font-bold text-xs px-3 py-1">
+                    {t.youSave} {savings.toLocaleString()} €
+                  </div>
+                )}
+                {isRoundtrip && <div className="text-[11px] text-white/40 italic">{t.roundtripNote}</div>}
               </div>
             )}
-            {form.departureId && form.vehicleId && price === null && (
+            {form.cityId && form.vehicleId && price === null && (
               <p className="text-sm text-black/50 italic">{t.priceUnavailable}</p>
             )}
 
@@ -175,7 +234,7 @@ export default function ReservationPage() {
               </Field>
             </div>
 
-            {selectedRoute?.withPilgrimage && (
+            {selectedCity?.withPilgrimage && (
               <label className="flex items-center gap-3 cursor-pointer select-none">
                 <div
                   onClick={() => set("withPilgrimage", !form.withPilgrimage)}
@@ -207,12 +266,10 @@ export default function ReservationPage() {
             </Field>
           </Section>
 
-          {form.name && form.email && form.departureId && form.vehicleId && (
+          {form.name && form.email && form.cityId && form.vehicleId && (
             <div className="rounded-xl border border-[#a9814e]/25 bg-[#a9814e]/10 px-5 py-4 text-sm text-black/60 space-y-1">
               <p className="font-semibold text-black/80 mb-2">{t.recap}</p>
-              <p>
-                {t.sumDepart} : <span className="text-black/90">{selectedRoute?.label}</span>
-              </p>
+              <p dir="ltr" className="text-black/90">{tripSummaryLabel}</p>
               <p>
                 {t.sumVehicle} : <span className="text-black/90">{selectedVehicle ? vehicleLabel(selectedVehicle.id, selectedVehicle.label, lang) : ""} ({selectedVehicle?.capacity})</span>
               </p>
@@ -224,6 +281,7 @@ export default function ReservationPage() {
               <p>
                 {t.sumRef} : <span className="font-mono text-[#8a6a3e]">{ref}</span>
               </p>
+              <p className="text-xs text-black/50 pt-1">{t.depositNote}</p>
             </div>
           )}
 
@@ -262,11 +320,11 @@ function Field({ label, optionalLabel, children }: { label: string; optionalLabe
   );
 }
 
-function SummaryRow({ label, value, mono }: { label: string; value: string; mono?: boolean }) {
+function SummaryRow({ label, value, mono, ltr }: { label: string; value: string; mono?: boolean; ltr?: boolean }) {
   return (
     <div className="flex justify-between gap-4">
       <span className="font-mono text-[11px] tracking-[0.1em] uppercase text-black/50">{label}</span>
-      <span className={`font-sans font-semibold text-[15px] text-end ${mono ? "font-mono" : ""}`}>{value}</span>
+      <span dir={ltr ? "ltr" : undefined} className={`font-sans font-semibold text-[15px] text-end ${mono ? "font-mono" : ""}`}>{value}</span>
     </div>
   );
 }
