@@ -69,20 +69,42 @@ export default function ReservationPage() {
 
   const cityLabel = selectedCity ? `${selectedCity.label}${selectedCity.code ? ` (${selectedCity.code})` : ""}` : null;
 
-  const handleSubmit = async (e: React.SyntheticEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setLoading(true);
-    await new Promise((r) => setTimeout(r, 800));
-    setLoading(false);
-    setSubmitted(true);
-  };
-
   const tripSummaryLabel = (() => {
     if (!cityLabel) return "—";
     if (form.tripType === "to") return `${cityLabel} → Ouman`;
     if (form.tripType === "from") return `Ouman → ${cityLabel}`;
     return `${cityLabel} ⇄ Ouman`;
   })();
+
+  const handleSubmit = async (e: React.SyntheticEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setLoading(true);
+    try {
+      await fetch("/api/reservation", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          ref,
+          tripSummary: tripSummaryLabel,
+          vehicle: selectedVehicle ? vehicleLabel(selectedVehicle.id, selectedVehicle.label, lang) : "",
+          date: form.date,
+          passengers: form.passengers,
+          luggage: form.luggage,
+          withPilgrimage: form.withPilgrimage,
+          specialRequests: form.specialRequests,
+          name: form.name,
+          email: form.email,
+          whatsapp: form.whatsapp,
+          price,
+        }),
+      });
+    } catch {
+      // La demande reste confirmée côté client même si la notification échoue —
+      // on ne bloque pas le client pour un problème d'envoi email/Telegram.
+    }
+    setLoading(false);
+    setSubmitted(true);
+  };
 
   if (submitted) {
     return (
